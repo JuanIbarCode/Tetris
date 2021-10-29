@@ -47,8 +47,7 @@ namespace Tetris
                     var key = Console.ReadKey(true).Key;
                     var dir = Utilidades.CogerDireccionSegunTecla(key);
                     var forma = dir != new Coordenadas(0, -1) ? _piezaActual.Forma : _piezaActual.SiguienteRotacion();
-                    
-                    
+
                     if (!_tablero.Colision(_piezaActual.Posicion, dir,  forma))
                     {
                         _piezaActual.LimpiarPieza();
@@ -67,11 +66,24 @@ namespace Tetris
                 }
                 
                 if (sw.ElapsedMilliseconds > 1000)
-                {   
-                    _piezaActual.LimpiarPieza();
-                    _piezaActual.MoverPieza(new Coordenadas(0, 1));
-                    _piezaActual.DibujarPieza();
-                    sw.Restart();
+                {
+                    if (_tablero.Colision(_piezaActual.Posicion, new Coordenadas(0, 1), _piezaActual.Forma))
+                    {
+                        _tablero.AgregarPieza(_piezaActual);
+
+                        _piezaActual = _piezaSiguiente;
+                        _piezaSiguiente = new Pieza(Utilidades.Random.Next(0, Utilidades.Piezas.Count));
+                        _tablero.DibujarMarcoSiguientePieza(_piezaSiguiente);
+
+                        sw.Restart();
+                    }
+                    else
+                    {
+                        _piezaActual.LimpiarPieza();
+                        _piezaActual.MoverPieza(new Coordenadas(0, 1));
+                        _piezaActual.DibujarPieza();
+                        sw.Restart();
+                    }
                 }
             }
         }

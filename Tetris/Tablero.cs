@@ -20,7 +20,16 @@ namespace Tetris
 
         public void AgregarPieza(Pieza pieza)
         {
-
+            for (var y = 0; y < pieza.Forma.GetLength(0); y++)
+            {
+                for (var x = 0; x < pieza.Forma.GetLength(1); x++)
+                {
+                    if (pieza.Forma[y, x])
+                    {
+                        tablero[x + pieza.Posicion.x, y + pieza.Posicion.y] = true;
+                    }
+                }
+            }
         }
         
         public void DibujarMarcoSiguientePieza(Pieza pieza)
@@ -75,10 +84,10 @@ namespace Tetris
                     {
                         if (y == -2 || y == pieza.Forma.GetLength(0) + 1)
                         {
-                            Utilidades.DibujarCaracteres(Utilidades.LadoSuperior.ToString(), x, y, -1 + offsetX,
+                            Utilidades.DibujarCaracteres(Utilidades.Horizontal.ToString(), x, y, -1 + offsetX,
                                 offsetY);
-                            Utilidades.DibujarCaracteres(Utilidades.LadoSuperior.ToString(), x, y, offsetX, offsetY);
-                            Utilidades.DibujarCaracteres(Utilidades.LadoSuperior.ToString(), x, y, 1 + offsetX,
+                            Utilidades.DibujarCaracteres(Utilidades.Horizontal.ToString(), x, y, offsetX, offsetY);
+                            Utilidades.DibujarCaracteres(Utilidades.Horizontal.ToString(), x, y, 1 + offsetX,
                                 offsetY);
                         }
                     }
@@ -98,7 +107,6 @@ namespace Tetris
                 }
             }
         }
-
         private void LimpiarTablero() 
         {
             _tablero = new bool[_ancho, _alto];
@@ -111,7 +119,6 @@ namespace Tetris
                 }   
             }
         }
-        
         private void LimpiarMarcoSiguientePieza()
         {
             var offsetX = (_ancho + 3) * 2;
@@ -155,9 +162,9 @@ namespace Tetris
                     {
                         if (y == 1 || y == _alto)
                         {
-                            Utilidades.DibujarCaracteres(Utilidades.LadoSuperior.ToString(), x, y, -1, 0);
-                            Utilidades.DibujarCaracteres(Utilidades.LadoSuperior.ToString(), x, y);
-                            Utilidades.DibujarCaracteres(Utilidades.LadoSuperior.ToString(), x, y, 1, 0);
+                            Utilidades.DibujarCaracteres(Utilidades.Horizontal.ToString(), x, y, -1, 0);
+                            Utilidades.DibujarCaracteres(Utilidades.Horizontal.ToString(), x, y);
+                            Utilidades.DibujarCaracteres(Utilidades.Horizontal.ToString(), x, y, 1, 0);
                         }
                     }
                     else if (x == _ancho)
@@ -191,25 +198,25 @@ namespace Tetris
 
         public bool Colision(Coordenadas posicion, Coordenadas direccion, bool[,] forma)
         {
+            if (direccion == new Coordenadas(0, -1)) direccion = new Coordenadas(0, 0);
             if (posicion.y + forma.GetLength(0) + direccion.y > _alto) return true;
-            
+
             for (var x = 0; x < forma.GetLength(1); x++)
             {
                 for (var y = 0; y < forma.GetLength(0); y++)
                 {
                     if (!forma[y, x]) continue;
-                    
+
                     var posX = posicion.x + x + direccion.x;
                     var posY = posicion.y + y + direccion.y;
-                    
+
                     if (posX is < 0 or > Utilidades.Ancho - 1) return true;
                     if (posY > 18) return true;
                     if (tablero[posX, posY]) return true;
                 }
             }
-            
+
             return false;
         }
-        
     }
 }

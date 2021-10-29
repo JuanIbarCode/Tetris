@@ -9,9 +9,9 @@ namespace Tetris
         public const int Alto = 20;
         
         public static Random Random = new Random();
-        
-        public const int OffsetX = 0;
-        public const int OffsetY = 0;
+
+        private const int OffsetX = 0;
+        private const int OffsetY = 0;
 
         //Caracteres del juego
         public const char Vacio = ' ';
@@ -22,8 +22,7 @@ namespace Tetris
         public const char EsquinaInferiorIzquierda = '╚';
         public const char LadoDerecho = '║';
         public const char LadoIzquierdo = '║';
-        public const char LadoInferior = '═';
-        public const char LadoSuperior = '═';
+        public const char Horizontal = '═';
         
         //Piezas
         public static readonly List<List<bool[,]>> Piezas = new() {
