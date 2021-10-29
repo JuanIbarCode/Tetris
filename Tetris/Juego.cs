@@ -57,7 +57,10 @@ namespace Tetris
                         {
                             _piezaActual.MoverPieza(dir);
                         }
-                        else _piezaActual.RotarPieza();
+                        else
+                        {
+                            _piezaActual.RotarPieza();
+                        }
                         
                         _piezaActual.DibujarPieza();
                     }
