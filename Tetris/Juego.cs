@@ -51,6 +51,7 @@ namespace Tetris
                     if (!_tablero.Colision(_piezaActual.Posicion, dir,  forma))
                     {
                         _piezaActual.LimpiarPieza();
+                        _piezaActual.LimpiarFantasma(_tablero, _piezaActual.Posicion);
 
                         if (dir != new Coordenadas(0, -1))
                         {
@@ -60,7 +61,8 @@ namespace Tetris
                         {
                             _piezaActual.RotarPieza();
                         }
-                        
+
+                        _piezaActual.DibujarFantasma(_tablero);
                         _piezaActual.DibujarPieza();
                     }
                 }
@@ -80,7 +82,11 @@ namespace Tetris
                     else
                     {
                         _piezaActual.LimpiarPieza();
+                        
                         _piezaActual.MoverPieza(new Coordenadas(0, 1));
+
+                        _piezaActual.LimpiarFantasma(_tablero, _piezaActual.Posicion);
+                        _piezaActual.DibujarFantasma(_tablero);
                         _piezaActual.DibujarPieza();
                         sw.Restart();
                     }

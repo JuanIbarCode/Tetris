@@ -82,6 +82,28 @@ namespace Tetris
             }
         }
 
+        public void DibujarFantasma(Tablero tablero)
+        {
+            var posicionFantasma = _posicion;
+            do
+            {
+                posicionFantasma += new Coordenadas(0, 1);
+            } while (!tablero.Colision(posicionFantasma, new Coordenadas(0, 1), _forma));
+            
+            
+            for (var x = 0; x < _forma.GetLength(1); x++)
+            {
+                for (var y = 0; y < _forma.GetLength(0); y++)
+                {
+                    if (_forma[y, x])
+                    {
+                        Utilidades.DibujarCaracteres(Utilidades.Bloque.ToString(), x + posicionFantasma.x,
+                            y + posicionFantasma.y, ConsoleColor.Gray, 1, 1, true);
+                    }
+                }
+            }
+        }
+
         public void LimpiarPieza()
         {
             for (var x = 0; x < _forma.GetLength(1); x++)
@@ -91,6 +113,27 @@ namespace Tetris
                     if (_forma[y, x])
                     {
                         Utilidades.DibujarCaracteres(Utilidades.Vacio.ToString(), x + _posicion.x, y + _posicion.y,
+                            _color, 1, 1, true);
+                    }
+                }
+            }
+        }
+
+        public void LimpiarFantasma(Tablero tablero, Coordenadas posicionAnterior)
+        {
+            var posicionFantasma = posicionAnterior;
+            do
+            {
+                posicionFantasma += new Coordenadas(0, 1);
+            } while (!tablero.Colision(posicionFantasma, new Coordenadas(0, 1), _forma));
+
+            for (var x = 0; x < _forma.GetLength(1); x++)
+            {
+                for (var y = 0; y < _forma.GetLength(0); y++)
+                {
+                    if (_forma[y, x])
+                    {
+                        Utilidades.DibujarCaracteres(Utilidades.Vacio.ToString(), x + posicionFantasma.x, y + posicionFantasma.y,
                             _color, 1, 1, true);
                     }
                 }

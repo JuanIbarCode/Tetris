@@ -6,6 +6,10 @@ namespace Tetris
     {
         private bool[,] _tablero;
         public bool[,] tablero => _tablero;
+        
+        private ConsoleColor[,] _coloresTablero;
+        public ConsoleColor[,] ColoresTablero => _coloresTablero;
+        
         private int _ancho;
         private int _alto;
 
@@ -27,11 +31,52 @@ namespace Tetris
                     if (pieza.Forma[y, x])
                     {
                         tablero[x + pieza.Posicion.x, y + pieza.Posicion.y] = true;
+                        _coloresTablero[x + pieza.Posicion.x, y + pieza.Posicion.y] = pieza.Color;
                     }
                 }
             }
+            
+            ComprobarLineasCompletas();
         }
         
+        private void ComprobarLineasCompletas()
+        {
+            for (var y = _alto - 1; y > 0; y--)
+            {
+                var lineaCompleta = true;
+                for (var x = 0; x < _ancho; x++)
+                {
+                    if (!tablero[x, y]) lineaCompleta = false;
+                }
+
+                if (lineaCompleta)
+                {
+                    LimpiarLinea(y);
+                    y = _alto - 1;
+                }
+            }
+
+            DibujarTablero();
+        }
+
+        private void LimpiarLinea(int linea)
+        {
+            for (var x = 0; x < _ancho; x++)
+            {
+                tablero[x, linea] = false;
+                _coloresTablero[x, linea] = ConsoleColor.White;
+            }
+
+            for (var y = linea; y > 0; y--)
+            {
+                for (var x = 0; x < _ancho; x++)
+                {
+                    tablero[x, y] = tablero[x, y - 1];
+                    _coloresTablero[x,y] = _coloresTablero[x, y - 1];
+                }
+            }
+        }
+
         public void DibujarMarcoSiguientePieza(Pieza pieza)
         {
             LimpiarMarcoSiguientePieza();
@@ -107,34 +152,6 @@ namespace Tetris
                 }
             }
         }
-        private void LimpiarTablero() 
-        {
-            _tablero = new bool[_ancho, _alto];
-            
-            for (var x = 0; x < _ancho; x++)
-            {
-                for (var y = 0; y < _alto; y++)
-                {
-                    tablero[x, y] = false;
-                }   
-            }
-        }
-        private void LimpiarMarcoSiguientePieza()
-        {
-            var offsetX = (_ancho + 3) * 2;
-            var offsetY = 1;
-
-            for (var y = 0; y < 12; y++)
-            {
-                for (var x = 0; x < 12; x++)
-                {
-                    Utilidades.DibujarCaracteres(Utilidades.Vacio.ToString(), x, y, -1 + offsetX, offsetY);
-                    Utilidades.DibujarCaracteres(Utilidades.Vacio.ToString(), x, y, offsetX, offsetY);
-                    Utilidades.DibujarCaracteres(Utilidades.Vacio.ToString(), x, y, 1 + offsetX, offsetY);
-                }
-            }
-        }
-        
         public void DibujarMarcoTablero()
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -186,15 +203,49 @@ namespace Tetris
             }
         }
 
-        private void ComprobarLineasCompletas()
+        private void DibujarTablero()
         {
-            
-        }
+            for (var y = _alto - 1; y > 0; y--)
+            {
+                for (var x = 0; x < _ancho; x++)
+                {
+                    var caracter = tablero[x, y] ? Utilidades.Bloque : Utilidades.Vacio;
+                    var color = _coloresTablero[x, y];
 
-        private void LimpiarLinea(int y)
-        {
-            
+                    Utilidades.DibujarCaracteres(caracter.ToString(), x, y, color, 1, 1, true);
+                }
+            }
         }
+        private void LimpiarTablero() 
+        {
+            _tablero = new bool[_ancho, _alto];
+            _coloresTablero = new ConsoleColor[_ancho, _alto];
+            
+            for (var x = 0; x < _ancho; x++)
+            {
+                for (var y = 0; y < _alto; y++)
+                {
+                    tablero[x, y] = false;
+                    _coloresTablero[x, y] = ConsoleColor.White;
+                }   
+            }
+        }
+        private void LimpiarMarcoSiguientePieza()
+        {
+            var offsetX = (_ancho + 3) * 2;
+            var offsetY = 1;
+
+            for (var y = 0; y < 12; y++)
+            {
+                for (var x = 0; x < 12; x++)
+                {
+                    Utilidades.DibujarCaracteres(Utilidades.Vacio.ToString(), x, y, -1 + offsetX, offsetY);
+                    Utilidades.DibujarCaracteres(Utilidades.Vacio.ToString(), x, y, offsetX, offsetY);
+                    Utilidades.DibujarCaracteres(Utilidades.Vacio.ToString(), x, y, 1 + offsetX, offsetY);
+                }
+            }
+        }
+        
 
         public bool Colision(Coordenadas posicion, Coordenadas direccion, bool[,] forma)
         {
