@@ -162,7 +162,6 @@ namespace Tetris
         #region DibujarCaracteres
         public static void DibujarCaracteres(string caracteres, int x, int y, ConsoleColor color)
         {
-            
             var mousePos = Console.GetCursorPosition();
             do
             {
